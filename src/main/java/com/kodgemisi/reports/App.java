@@ -20,9 +20,8 @@ public class App {
         // options
         Map<String, String> options = new HashMap<>();
         options.put("inputDataFile", "/home/destan/Desktop/data.json");
-        String optionsStr = new ObjectMapper().writeValueAsString(options);
 
-        new NightmareWrapper(nightmarePath).generatePdf(templateUrl, optionsStr);
+        new NightmareWrapper(nightmarePath).generatePdf(templateUrl, options);
 
         System.out.println("ended");
     }

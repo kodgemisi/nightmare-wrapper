@@ -1,5 +1,7 @@
 package com.kodgemisi.reports;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,16 +45,18 @@ public class NightmareWrapper {
      * This method is thread safe.
      *
      * @param url
-     * @param arguments
+     * @param options
      * @throws IOException
      * @throws InterruptedException
      */
-    public void generatePdf(final URL url, String... arguments) throws IOException, InterruptedException {
+    public void generatePdf(final URL url, Map<String, String> options) throws IOException, InterruptedException {
         // using URL class instead of String class is for validation
 
         if (url == null) {
             throw new IllegalArgumentException("url is required.");
         }
+
+        final String optionsStr = new ObjectMapper().writeValueAsString(options);
 
         // ProcessBuilder is not thread safe so every thread (HTTP request) needs a new instance
         final ProcessBuilder processBuilder = new ProcessBuilder();
@@ -61,11 +65,11 @@ public class NightmareWrapper {
         env.put("DEBUG", "nightmare*");//TODO put only if debug flag is set [need a debug flag]
 
         // merging user provided arguments with our essential ones
-        final List commandArguments = new ArrayList(arguments.length + 2);
+        final List commandArguments = new ArrayList(4);
         commandArguments.add("./node");
         commandArguments.add("generatePdf.js");
         commandArguments.add(url.toString());// target url
-        commandArguments.addAll(Arrays.asList(arguments));
+        commandArguments.add(optionsStr);
 
         Process process = processBuilder
                 .directory(directory.toFile())
