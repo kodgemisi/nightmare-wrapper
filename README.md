@@ -32,7 +32,7 @@ Path directoryPath = Paths.get("/home/user/workspace/nightmareWrapperTryout");
 new NightmareWrapper(directoryPath).generatePdf(url, options);
 ```
 
-## generatePdf(url, options)
+## generatePdf(final URL url, Map<String, String> options, Map<String, Object> data)
 
 ### url
 
@@ -40,7 +40,7 @@ This is a `java.net.URL` mainly for url validation purpose. It is the source whi
 
 ### options
 
-This is a `Map<String, String>` which will be passed as JSON to `generatePdf.js`.
+Optional, may be null. This will be passed as JSON to `generatePdf.js`.
 
 See below the default options used by `generatePdf.js`, you can override them by putting some into the options map:
 
@@ -78,6 +78,10 @@ options.put("inputDataFile", "/home/user/workspace/data.json");
 new NightmareWrapper(directoryPath).generatePdf(templateUrl, options);
 ```
 
+### data
+
+Optional, may be null. This will be passed as JSON to `generatePdf.js`. See below _Using data from options in the HTML_ for usage.
+
 ## Using data from options in the HTML (optional)
 
 If you need to use some data which should be passed by the calling process, you need to create a json file including data.
@@ -90,10 +94,11 @@ The file should contain single, valid json i.e parsable with `JSON.parse`. Its c
 In the HTML page you need to put your javascript into `onReportDataReady` as follows in order to use data from `inputDataFile`:
 
 ```javascript
-window.onReportDataReady = function(data) {
+// dataFromCommandLine is undefined if "data" is null in `generatePdf`
+// dataFromFile is undefined if `options.inputDataFile` is not pointing a valid file or left default
+window.onReportDataReady = function(dataFromCommandLine, dataFromFile) {
     // your code goes here...
 }
 ```
 
 Of course you don't need to put any javascipt inside the callback if the code doesn't need any data from  `inputDataFile`.
-

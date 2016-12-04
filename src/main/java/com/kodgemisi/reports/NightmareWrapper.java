@@ -8,10 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -45,15 +42,22 @@ public class NightmareWrapper {
      * This method is thread safe.
      *
      * @param url
-     * @param options
+     * @param options may be null
+     * @param data to be passed as command line argument after serialized to JSON
      * @throws IOException
      * @throws InterruptedException
      */
-    public void generatePdf(final URL url, Map<String, String> options) throws IOException, InterruptedException {
+    public void generatePdf(final URL url, Map<String, String> options, Map<String, Object> data) throws IOException, InterruptedException {
         // using URL class instead of String class is for validation
 
         if (url == null) {
             throw new IllegalArgumentException("url is required.");
+        }
+
+        // options should be passed even it's empty to ensure correct argument order when there is also "data" as last argument
+        // e.g node generatePdf.js http://example.com {} {"some": "data"}
+        if(options == null) {
+            options = Collections.emptyMap();
         }
 
         final String optionsStr = new ObjectMapper().writeValueAsString(options);
@@ -65,11 +69,17 @@ public class NightmareWrapper {
         env.put("DEBUG", "nightmare*");//TODO put only if debug flag is set [need a debug flag]
 
         // merging user provided arguments with our essential ones
-        final List commandArguments = new ArrayList(4);
+        // order of "commandArguments.add" is IMPORTANT!
+        final List commandArguments = new ArrayList(5);
         commandArguments.add("./node");
         commandArguments.add("generatePdf.js");
         commandArguments.add(url.toString());// target url
         commandArguments.add(optionsStr);
+
+        if(data != null) {
+            final String dataStr = new ObjectMapper().writeValueAsString(data);
+            commandArguments.add(dataStr);
+        }
 
         Process process = processBuilder
                 .directory(directory.toFile())
@@ -81,6 +91,19 @@ public class NightmareWrapper {
         int exitCode = process.waitFor();
 
         System.out.println("exitCode " + exitCode);
+    }
+
+    /**
+     * This is same as calling {@link #generatePdf(URL, Map, Map)} with a null as 3rd parameter.
+     *
+     * @param url
+     * @param options may be null
+     * @throws IOException
+     * @throws InterruptedException
+     * @see #generatePdf(URL, Map, Map)
+     */
+    public void generatePdf(URL url, Map<String, String> options) throws IOException, InterruptedException {
+        this.generatePdf(url, options, null);
     }
 
     //http://www.baeldung.com/run-shell-command-in-java
