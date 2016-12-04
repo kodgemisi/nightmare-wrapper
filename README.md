@@ -29,12 +29,12 @@ Then the directory's full path should be passed as param as follows:
 
 ```java
 Path directoryPath = Paths.get("/home/user/workspace/nightmareWrapperTryout");
-new NightmareWrapper(directoryPath).generatePdf(url, optionsJson);
+new NightmareWrapper(directoryPath).generatePdf(url, options);
 ```
 
-## generatePdf(url, optionsJson)
+## generatePdf(url, options)
 
-### Url
+### url
 
 This is a `java.net.URL` mainly for url validation purpose. It is the source which will be loaded and then converted to pdf.
 
@@ -57,7 +57,7 @@ window.onReportDataReady = function(data) {
 
 Of course you don't need to put any javascipt inside the callback if the code doesn't need any data from  `inputDataFile`.
 
-### Options
+### options
 
 This is a `Map<String, String>` which will be passed as JSON to `generatePdf.js`.
 
