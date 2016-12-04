@@ -32,6 +32,8 @@ Path directoryPath = Paths.get("/home/user/workspace/nightmareWrapperTryout");
 new NightmareWrapper(directoryPath).generatePdf(url, optionsJson);
 ```
 
+## generatePdf(url, optionsJson)
+
 ### Url
 
 This is a `java.net.URL` mainly for url validation purpose. It is the source which will be loaded and then converted to pdf.
@@ -81,6 +83,7 @@ const defaultOptions = {
   // this file should contain single, valid json. Check if it's valid via http://jsonlint.com
   inputDataFile: path.join('.', 'inputDataFile.js'),
 
+  // available encodings: https://github.com/nodejs/node/blob/v6.9.1/lib/internal/util.js#L141
   inputEncoding: 'utf8'
 };
 ```
