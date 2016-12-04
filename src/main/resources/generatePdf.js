@@ -1,6 +1,6 @@
 /*
  Usage:
- node generatePdf.js <targetUrl> <options>
+ node generatePdf.js <targetUrl> <options> <jsonData>
  */
 
 const Nightmare = require('nightmare');
@@ -28,9 +28,12 @@ const targetUrl = parseTargetUrl();
 const options = parseOptions();
 
 // should be called after parseOptions
-const reportInput = parseReportInput();
+const reportInputFromFile = parseReportInputFromFile();
+console.log('reportInputFromFile', reportInputFromFile);
 
-console.log('reportInput', reportInput);
+const reportInputFromCommandLineArgs = parseReportInputFromCommandLineArgs();
+console.log('reportInputFromCommandLineArgs', reportInputFromCommandLineArgs);
+
 
 nightmare
     .on('console', function() {
@@ -40,14 +43,14 @@ nightmare
         console.log('js-error', options.outputFileName, arguments)
     })
     .goto(targetUrl)
-    .evaluate(function(input) {
+    .evaluate(function(inputFromCommandLine, inputFromFile) {
         if( typeof window.onReportDataReady == 'function') {
-            window.onReportDataReady(input);
+            window.onReportDataReady(inputFromCommandLine, inputFromFile);
         }
         else {
             console.error('onReportDataReady callback is not a function');
         }
-    }, reportInput)
+    }, reportInputFromCommandLineArgs, reportInputFromFile)
     .wait(options.timeout)
     .pdf(path.join(options.outputFolder, options.outputFileName), {
         pageSize: options.pageSize,
@@ -67,17 +70,35 @@ nightmare
 // ==========================================================
 
 // should be called after parseOptions
-function parseReportInput() {
+function parseReportInputFromFile() {
     let input;
-    try {
-        input = fs.readFileSync(options.inputDataFile, {encoding: options.inputEncoding});
-        return JSON.parse(input);
+    if(fs.existsSync(options.inputDataFile)) {
+        try {
+            input = fs.readFileSync(options.inputDataFile, {encoding: options.inputEncoding});
+            return JSON.parse(input);
+        }
+        catch(e) {
+            console.error('parseReportInputFromFile, input:', input);
+            console.error(e);
+            return {hasError: true, error: e};
+        }
     }
-    catch(e) {
-        console.error('input is', input);
-        console.error(e);
-        return {hasError: true, error: e};
+    return undefined;
+}
+
+function parseReportInputFromCommandLineArgs() {
+    let input = process.argv[4];
+    if(input) {
+        try {
+            return JSON.parse(input);
+        }
+        catch(e) {
+            console.error('parseReportInputFromCommandLineArgs, input:', input);
+            console.error(e);
+            return {hasError: true, error: e};
+        }
     }
+    return undefined;
 }
 
 function parseTargetUrl() {
