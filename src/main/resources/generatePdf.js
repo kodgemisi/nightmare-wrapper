@@ -14,6 +14,7 @@ const defaultOptions = {
     // possible values, those are case sensitive: [A4, A3, Legal, Letter, Tabloid]
     // https://github.com/electron/electron/blob/v0.35.2/docs/api/web-contents.md#webcontentsprinttopdfoptions-callback
     pageSize: 'A4',
+    marginsType: 0, //https://github.com/electron/electron/blob/v0.35.2/docs/api/web-contents.md#webcontentsprinttopdfoptions-callback
     landscape: false,
     outputFolder: os.tmpdir(),
     outputFileName: randomString(5) + '.pdf',
@@ -50,7 +51,7 @@ nightmare
     .wait(options.timeout)
     .pdf(path.join(options.outputFolder, options.outputFileName), {
         pageSize: options.pageSize,
-        marginsType: 1,
+        marginsType: options.marginsType,
         printBackground: true
     })
     .end()
