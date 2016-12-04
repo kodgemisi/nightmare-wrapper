@@ -36,14 +36,14 @@ new NightmareWrapper(directoryPath).generatePdf(url, optionsJson);
 
 This is a `java.net.URL` mainly for url validation purpose. It is the source which will be loaded and then converted to pdf.
 
-#### Using data from options in the HTML
+#### Using data from options in the HTML (optional)
 
 If you need to use some data which should be passed by the calling process, you need to create a json file including data.
 Then need to specify its full path in options as `inputDataFile`.
 
-By default nightmare-wrapper checks `./inputDataFile.js` path to read the file, it it doesn't exist then program continues after logging the situation.
+By default nightmare-wrapper checks `./inputDataFile.js` path to read the file, if it doesn't exist then program continues after logging the situation.
 
-The file should contain single, valid json. Its content will be parsed via `JSON.parse` and then passed to `onReportDataReady` callback.
+The file should contain single, valid json i.e parsable with `JSON.parse`. Its content will be parsed via `JSON.parse` and then passed to `onReportDataReady` callback.
 
 In the HTML page you need to put your javascript into `onReportDataReady` as follows in order to use data from `inputDataFile`:
 
@@ -52,6 +52,8 @@ window.onReportDataReady = function(data) {
     // your code goes here...
 }
 ```
+
+Of course you don't need to put any javascipt inside the callback if the code doesn't need any data from  `inputDataFile`.
 
 ### Options
 
