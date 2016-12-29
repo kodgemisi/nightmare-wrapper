@@ -6,6 +6,17 @@ Currently only works on Linux (tested on Ubuntu 16.04)
 
 ## Installation & Usage
 
+### Headless
+
+Following packages are required. See [here](https://github.com/segmentio/nightmare/issues/224#issuecomment-150977951) for details. 
+
+```bash
+sudo apt update
+sudo apt install -y xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps clang libdbus-1-dev libgtk2.0-dev libnotify-dev libgnome-keyring-dev libgconf2-dev libasound2-dev libcap-dev libcups2-dev libxtst-dev libxss1 libnss3-dev gcc-multilib g++-multilib
+```
+
+### Common Requirements
+
 Recommended: Use stable LTS node binary from here: https://nodejs.org/en/download/
 
 Tested with `node.js v6.9.1 (includes npm 3.10.8)` on Ubuntu 16.04.1 LTS 64-bit (both server and desktop)
