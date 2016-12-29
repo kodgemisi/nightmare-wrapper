@@ -70,8 +70,10 @@ public class NightmareWrapper {
 
         // merging user provided arguments with our essential ones
         // order of "commandArguments.add" is IMPORTANT!
-        final List commandArguments = new ArrayList(5);
-        commandArguments.add("./node");
+        final List<String> commandArguments = new ArrayList(5);
+
+        // nightmare_wrapper.sh 'wraps' xvfb-run for headless environments
+        commandArguments.add("./nightmare_wrapper.sh");
         commandArguments.add("generatePdf.js");
         commandArguments.add(url.toString());// target url
         commandArguments.add(optionsStr);
@@ -90,7 +92,7 @@ public class NightmareWrapper {
         Executors.newSingleThreadExecutor().submit(streamGobbler);// FIXME use a pool
         int exitCode = process.waitFor();
 
-        System.out.println("exitCode " + exitCode);
+        System.out.println("NightmareWrapper: exitCode " + exitCode);
     }
 
     /**
