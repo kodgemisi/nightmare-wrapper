@@ -142,3 +142,22 @@ window.onReportDataReady = function(dataFromCommandLine, dataFromFile) {
 ```
 
 Of course you don't need to put any javascipt inside the callback if the code doesn't need any data from  `inputDataFile`.
+
+## Troubleshooting
+
+```bash
+$ ./nightmare_wrapper.sh generatePdf.js http://kodgemisi.com
+  nightmare queuing process start +0ms
+optionsFromUser undefined
+reportInputFromFile { version: '1.0.0' }
+reportInputFromCommandLineArgs undefined
+  nightmare queueing action "goto" for http://kodgemisi.com +15ms
+  nightmare queueing action "evaluate" +2ms
+  nightmare queueing action "wait" +0ms
+  nightmare queueing action "pdf" +0ms
+  nightmare running +1ms
+  nightmare electron child process exited with code 127: command not found - you may not have electron installed correctly +26ms
+  nightmare electron child process not started yet, skipping kill. +1ms
+```
+
+Check dependencies. For example it might be `libxss` as per told [here](https://github.com/segmentio/nightmare/issues/602#issuecomment-228086618)

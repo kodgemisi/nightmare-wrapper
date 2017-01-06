@@ -88,8 +88,8 @@ public class NightmareWrapper {
                 .command(commandArguments)
                 .start();
 
-        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
-        Executors.newSingleThreadExecutor().submit(streamGobbler);// FIXME use a pool
+//        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
+//        Executors.newSingleThreadExecutor().submit(streamGobbler);// FIXME use a pool
         int exitCode = process.waitFor();
 
         System.out.println("NightmareWrapper: exitCode " + exitCode);
@@ -109,21 +109,21 @@ public class NightmareWrapper {
     }
 
     //http://www.baeldung.com/run-shell-command-in-java
-    private static class StreamGobbler implements Runnable {
-        private InputStream inputStream;
-        private InputStream errorStream;
-        private Consumer<String> consumer;
-
-        public StreamGobbler(InputStream inputStream, InputStream errorStream, Consumer<String> consumer) {
-            this.inputStream = inputStream;
-            this.errorStream = errorStream;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
-            new BufferedReader(new InputStreamReader(errorStream)).lines().forEach(consumer);
-        }
-    }
+//    private static class StreamGobbler implements Runnable {
+//        private InputStream inputStream;
+//        private InputStream errorStream;
+//        private Consumer<String> consumer;
+//
+//        public StreamGobbler(InputStream inputStream, InputStream errorStream, Consumer<String> consumer) {
+//            this.inputStream = inputStream;
+//            this.errorStream = errorStream;
+//            this.consumer = consumer;
+//        }
+//
+//        @Override
+//        public void run() {
+//            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+//            new BufferedReader(new InputStreamReader(errorStream)).lines().forEach(consumer);
+//        }
+//    }
 }
