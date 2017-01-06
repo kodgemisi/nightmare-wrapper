@@ -49,6 +49,29 @@ Path directoryPath = Paths.get("/home/user/workspace/nightmareWrapperTryout");
 new NightmareWrapper(directoryPath).generatePdf(url, options);
 ```
 
+### Checking if it works
+
+```bash
+$ ./nightmare_wrapper.sh generatePdf.js http://kodgemisi.com
+  nightmare queuing process start +0ms
+optionsFromUser undefined
+reportInputFromFile { a: 'deneme' }
+reportInputFromCommandLineArgs undefined
+  nightmare queueing action "goto" for http://kodgemisi.com +11ms
+  nightmare queueing action "evaluate" +1ms
+  nightmare queueing action "wait" +0ms
+  nightmare queueing action "pdf" +0ms
+  nightmare running +1ms
+log x7dvs.pdf { '0': 'log',
+  '1': 'JQMIGRATE: Migrate is installed, version 1.4.1' }
+log x7dvs.pdf { '0': 'error',
+  '1': 'onReportDataReady callback is not a function' }
+  nightmare electron child process exited with code 0: success! +5s
+x7dvs.pdf pdf generation successful
+```
+
+Your generated pdf is in `/tmp` directory with name `x7dvs.pdf`. Note that the name is random for this example.
+
 ## generatePdf(final URL url, Map<String, String> options, Map<String, Object> data)
 
 ### url
