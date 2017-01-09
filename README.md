@@ -17,6 +17,14 @@ export PATH=$PATH:$(pwd)
 ./npm install nightmare
 ```
 
+for RedHat 7
+```bash
+sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+sudo yum install xorg-x11-server-Xvfb libXScrnSaver
+```
+
+
+
 ### Common Requirements
 
 Recommended: Use stable LTS node binary from here: https://nodejs.org/en/download/
