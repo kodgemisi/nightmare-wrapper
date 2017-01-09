@@ -72,7 +72,7 @@ x7dvs.pdf pdf generation successful
 
 Your generated pdf is in `/tmp` directory with name `x7dvs.pdf`. Note that the name is random for this example.
 
-## generatePdf(final URL url, Map<String, String> options, Map<String, Object> data)
+## generatePdf(final URL url, Map<String, Object> options, Map<String, Object> data)
 
 ### url
 
@@ -82,7 +82,7 @@ This is a `java.net.URL` mainly for url validation purpose. It is the source whi
 
 Optional, may be null. This will be passed as JSON to `generatePdf.js`.
 
-See below the default options used by `generatePdf.js`, you can override them by putting some into the options map:
+See below the default options used by `generatePdf.js`, you can override them by putting some value into the options map:
 
 ```
 const defaultOptions = {
@@ -93,7 +93,8 @@ const defaultOptions = {
   pageSize: 'A4',
   marginsType: 0, // 0 means default, refer to "electron" documentation link
 
-  landscape: false,
+  // possible values: 'portrait' or 'landscape'
+  orientation: 'portrait',
 
   outputFolder: os.tmpdir(),
 
@@ -112,7 +113,7 @@ const defaultOptions = {
 You can override above options as follows:
 
 ```
-Map<String, String> options = new HashMap<>();
+Map<String, Object> options = new HashMap<>();
 options.put("inputDataFile", "/home/user/workspace/data.json");
 
 new NightmareWrapper(directoryPath).generatePdf(templateUrl, options);

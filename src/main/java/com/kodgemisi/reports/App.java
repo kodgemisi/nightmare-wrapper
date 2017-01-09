@@ -1,8 +1,6 @@
 package com.kodgemisi.reports;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -19,7 +17,7 @@ public class App {
         URL templateUrl = new URL("file:///home/destan/Desktop/reporting/report_template.html");
 
         // options
-        Map<String, String> options = new HashMap<>();
+        Map<String, Object> options = new HashMap<>();
         options.put("inputDataFile", "/home/destan/Desktop/data.json");
 
         Map<String, Object> data = new HashMap<>();

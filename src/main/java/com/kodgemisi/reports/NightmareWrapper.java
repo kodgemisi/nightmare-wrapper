@@ -2,13 +2,17 @@ package com.kodgemisi.reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * This class is a wrapper for Nightmare.js process.
@@ -44,7 +48,7 @@ public class NightmareWrapper {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public void generatePdf(final URL url, Map<String, String> options, Map<String, Object> data) throws IOException, InterruptedException {
+	public void generatePdf(final URL url, Map<String, Object> options, Map<String, Object> data) throws IOException, InterruptedException {
 		// using URL class instead of String class is for validation
 
 		if (url == null) {
@@ -82,8 +86,8 @@ public class NightmareWrapper {
 
 		Process process = processBuilder.directory(directory.toFile()).command(commandArguments).start();
 
-		//        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
-		//        Executors.newSingleThreadExecutor().submit(streamGobbler);// FIXME use a pool
+		StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream());
+		Executors.newSingleThreadExecutor().submit(streamGobbler);// FIXME use a pool
 		int exitCode = process.waitFor();
 
 		System.out.println("NightmareWrapper: exitCode " + exitCode);
@@ -98,26 +102,45 @@ public class NightmareWrapper {
 	 * @throws InterruptedException
 	 * @see #generatePdf(URL, Map, Map)
 	 */
-	public void generatePdf(URL url, Map<String, String> options) throws IOException, InterruptedException {
+	public void generatePdf(URL url, Map<String, Object> options) throws IOException, InterruptedException {
 		this.generatePdf(url, options, null);
 	}
 
 	//http://www.baeldung.com/run-shell-command-in-java
-	//    private static class StreamGobbler implements Runnable {
-	//        private InputStream inputStream;
-	//        private InputStream errorStream;
-	//        private Consumer<String> consumer;
-	//
-	//        public StreamGobbler(InputStream inputStream, InputStream errorStream, Consumer<String> consumer) {
-	//            this.inputStream = inputStream;
-	//            this.errorStream = errorStream;
-	//            this.consumer = consumer;
-	//        }
-	//
-	//        @Override
-	//        public void run() {
-	//            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
-	//            new BufferedReader(new InputStreamReader(errorStream)).lines().forEach(consumer);
-	//        }
-	//    }
+	private static class StreamGobbler implements Runnable {
+
+		private InputStream inputStream;
+
+		private InputStream errorStream;
+
+		public StreamGobbler(InputStream inputStream, InputStream errorStream) {
+			this.inputStream = inputStream;
+			this.errorStream = errorStream;
+		}
+
+		@Override
+		public void run() {
+			try (InputStreamReader is = new InputStreamReader(inputStream);
+					InputStreamReader es = new InputStreamReader(errorStream);
+					BufferedReader ibf = new BufferedReader(is);
+					BufferedReader ebf = new BufferedReader(es);) {
+
+				// FIXME find a better way? may be in the same loop?
+				String input;
+				while ((input = ibf.readLine()) != null) {
+					System.out.println(input);
+				}
+
+				String error;
+				while ((error = ebf.readLine()) != null) {
+					System.err.println(error);
+				}
+
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
 }

@@ -11,15 +11,23 @@ const fs = require('fs');
 
 const defaultOptions = {
     timeout: 1500, //ms
+
     // possible values, those are case sensitive: [A4, A3, Legal, Letter, Tabloid]
     // https://github.com/electron/electron/blob/v0.35.2/docs/api/web-contents.md#webcontentsprinttopdfoptions-callback
     pageSize: 'A4',
-    marginsType: 0, //https://github.com/electron/electron/blob/v0.35.2/docs/api/web-contents.md#webcontentsprinttopdfoptions-callback
-    landscape: false,
+    marginsType: 0,
+
+    /**
+     * Electron uses `landscape: false` option for orientation but we use a string value because it's more intuitive
+     *
+     * Available values for "orientation": 'portrait' or 'landscape'. Those values are case insensitive
+     */
+    orientation: 'portrait',
+
     outputFolder: os.tmpdir(),
     outputFileName: randomString(5) + '.pdf',
 
-    // this SHOLD BE WITHOUT 'file://' prefix otherwise cannot find the file
+    // this SHOULD BE WITHOUT 'file://' prefix otherwise cannot find the file
     inputDataFile: path.join('.', 'inputDataFile.js'),
     inputEncoding: 'utf8'
 };
@@ -55,7 +63,9 @@ nightmare
     .pdf(path.join(options.outputFolder, options.outputFileName), {
         pageSize: options.pageSize,
         marginsType: options.marginsType,
-        printBackground: true
+        printBackground: true,
+        printSelectionOnly: false,
+        landscape: options.landscape
     })
     .end()
     .then(function () {
@@ -124,7 +134,14 @@ function parseOptions() {
     }
 
     console.log('optionsFromUser', optionsFromUser);
-    return Object.assign({}, defaultOptions, optionsFromUser);
+    var options = Object.assign({}, defaultOptions, optionsFromUser);
+
+    // map user friendly orientation value to API friendly format
+    options.landscape = options.orientation.toLowerCase() == 'landscape';// this value should really be a boolean
+    delete options.orientation;
+
+    console.log('final options', options);
+    return options;
 }
 
 // Thanks http://stackoverflow.com/a/10727155/878361
