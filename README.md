@@ -24,6 +24,11 @@ sudo yum install xorg-x11-server-Xvfb libXScrnSaver
 ```
 
 
+for Arch Linux
+```bash
+sudo pacman -S xorg-server-xvfb libxi
+```
+
 
 ### Common Requirements
 
