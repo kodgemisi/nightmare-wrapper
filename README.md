@@ -33,7 +33,7 @@ Tested with `node.js v6.9.1 (includes npm 3.10.8)` on Ubuntu 16.04.1 LTS 64-bit 
 
 * Create a directory, for example named as `nightmareWrapperTryout`
 * Install nightmarejs `npm install nightmare`
-* Copy `resources/generatePdf.js` into `nightmareWrapperTryout` because otherwise it cannot be used as it would be in a jar file at runtime.
+* Copy `resources/generatePdf.js`, `resources/inputDataFile.js` and `resources/nightmare_wrapper.sh` into `nightmareWrapperTryout` because otherwise it cannot be used as it would be in a jar file at runtime.
 * create a symlink to node binary
 
 The directory should be like as follows:
