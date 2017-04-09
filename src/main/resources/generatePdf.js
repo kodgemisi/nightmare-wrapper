@@ -29,7 +29,8 @@ const defaultOptions = {
 
     // this SHOULD BE WITHOUT 'file://' prefix otherwise cannot find the file
     inputDataFile: path.join('.', 'inputDataFile.js'),
-    inputEncoding: 'utf8'
+    inputEncoding: 'utf8',
+    headers: {}
 };
 
 const targetUrl = parseTargetUrl();
@@ -42,7 +43,6 @@ console.log('reportInputFromFile', reportInputFromFile);
 const reportInputFromCommandLineArgs = parseReportInputFromCommandLineArgs();
 console.log('reportInputFromCommandLineArgs', reportInputFromCommandLineArgs);
 
-
 nightmare
     .on('console', function() {
         console.log('log', options.outputFileName, arguments)
@@ -50,7 +50,7 @@ nightmare
     .on('page', function() {
         console.log('js-error', options.outputFileName, arguments)
     })
-    .goto(targetUrl)
+    .goto(targetUrl, options.headers)
     .evaluate(function(inputFromCommandLine, inputFromFile) {
         if( typeof window.onReportDataReady == 'function') {
             window.onReportDataReady(inputFromCommandLine, inputFromFile);
