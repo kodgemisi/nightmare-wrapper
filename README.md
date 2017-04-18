@@ -23,12 +23,10 @@ sudo subscription-manager repos --enable rhel-7-server-optional-rpms
 sudo yum install xorg-x11-server-Xvfb libXScrnSaver
 ```
 
-
 for Arch Linux
 ```bash
 sudo pacman -S xorg-server-xvfb libxi
 ```
-
 
 ### Common Requirements
 
@@ -37,7 +35,7 @@ Recommended: Use stable LTS node binary from here: https://nodejs.org/en/downloa
 Tested with `node.js v6.9.1 (includes npm 3.10.8)` on Ubuntu 16.04.1 LTS 64-bit (both server and desktop)
 
 * Create a directory, for example named as `nightmareWrapperTryout`
-* Install nightmarejs `npm install nightmare`
+* Install nightmarejs `npm install nightmare` Tested with version `2.10.0`
 * Copy `resources/generatePdf.js`, `resources/inputDataFile.js` and `resources/nightmare_wrapper.sh` into `nightmareWrapperTryout` because otherwise it cannot be used as it would be in a jar file at runtime.
 * create a symlink to node binary
 
@@ -119,7 +117,10 @@ const defaultOptions = {
   inputDataFile: path.join('.', 'inputDataFile.js'),
 
   // available encodings: https://github.com/nodejs/node/blob/v6.9.1/lib/internal/util.js#L141
-  inputEncoding: 'utf8'
+  inputEncoding: 'utf8',
+  
+  // request headers
+  headers: {}
 };
 ```
 
