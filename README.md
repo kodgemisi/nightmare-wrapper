@@ -176,3 +176,12 @@ reportInputFromCommandLineArgs undefined
 ```
 
 Check dependencies. For example it might be `libxss` as per told [here](https://github.com/segmentio/nightmare/issues/602#issuecomment-228086618)
+
+---
+
+```
+$ ./npm install nightmare
+/usr/bin/env: ‘node’: No such file or directory
+```
+
+make sure you execute `export PATH=$PATH:$(pwd)` before `npm install`
